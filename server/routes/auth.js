@@ -5,6 +5,61 @@ const db = require("../db");
 
 const router = express.Router();
 
+// At the top of auth.js
+const authenticateToken = require("../middleware/authMiddleware");
+
+// Password validation schema
+const changePasswordSchema = yup.object().shape({
+  currentPassword: yup.string().required(),
+  newPassword: yup
+    .string()
+    .min(8)
+    .max(16)
+    .matches(/[A-Z]/, "must contain an uppercase letter")
+    .matches(/[!@#$%^&*]/, "must contain a special character")
+    .required(),
+});
+
+// ✅ Change Password Route (Protected)
+router.post("/change-password", authenticateToken, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    // Validate incoming data
+    await changePasswordSchema.validate({ currentPassword, newPassword });
+
+    // Get user from DB
+    const [users] = await db.query("SELECT * FROM users WHERE id = ?", [
+      req.user.id,
+    ]);
+    const user = users[0];
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Compare current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Current password is incorrect." });
+    }
+
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update in DB
+    await db.query("UPDATE users SET password = ? WHERE id = ?", [
+      hashedNewPassword,
+      req.user.id,
+    ]);
+
+    res.json({ message: "Password updated successfully!" });
+  } catch (err) {
+    console.error("Password change error:", err.message);
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // 📌 Signup Validation Schema
 const signupSchema = yup.object().shape({
   name: yup.string().min(2).max(60).required(),
@@ -112,5 +167,60 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 });
+
+//----------------------------    ------------------------
+
+// ✅ Change Password Route
+router.put(
+  "/change-password",
+  authenticateToken, // 🛡️ must be logged in
+  async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    try {
+      // 1️⃣ Validate new password format using yup
+      const schema = yup
+        .string()
+        .min(8)
+        .max(16)
+        .matches(/[A-Z]/, "Must include an uppercase letter")
+        .matches(/[!@#$%^&*]/, "Must include a special character")
+        .required();
+
+      await schema.validate(newPassword);
+
+      // 2️⃣ Fetch user by ID
+      const [userRows] = await db.query("SELECT * FROM users WHERE id = ?", [
+        userId,
+      ]);
+      const user = userRows[0];
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // 3️⃣ Compare old password
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ error: "Old password is incorrect" });
+      }
+
+      // 4️⃣ Hash new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // 5️⃣ Update password in DB
+      await db.query("UPDATE users SET password = ? WHERE id = ?", [
+        hashedPassword,
+        userId,
+      ]);
+
+      return res.json({ message: "Password updated successfully" });
+    } catch (err) {
+      console.error("Password change error:", err.message);
+      return res.status(400).json({ error: err.message });
+    }
+  }
+);
 
 module.exports = router;
