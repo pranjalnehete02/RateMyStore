@@ -13,6 +13,12 @@ app.use("/api/auth", authRoutes);
 const adminRoutes = require("./routes/admin");
 app.use("/api/admin", adminRoutes);
 
+const ratingRoutes = require("./routes/ratings");
+app.use("/api/ratings", ratingRoutes);
+
+const storeRoutes = require("./routes/stores");
+app.use("/api/stores", storeRoutes);
+
 const testRoutes = require("./routes/test");
 app.use("/api", testRoutes);
 

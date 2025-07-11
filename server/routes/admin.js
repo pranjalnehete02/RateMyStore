@@ -92,7 +92,7 @@ router.get(
   }
 );
 
-// ✅ Create a new user (Admin Only)
+// ✅ Admin Add New User
 router.post(
   "/users",
   authenticateToken,
@@ -100,48 +100,49 @@ router.post(
   async (req, res) => {
     const { name, email, password, address, role } = req.body;
 
-    // 🔒 Validation Schema
-    const schema = yup.object().shape({
+    // ✅ Schema validation using Yup
+    const userSchema = yup.object().shape({
       name: yup.string().min(2).max(60).required(),
       email: yup.string().email().required(),
       password: yup
         .string()
         .min(8)
         .max(16)
-        .matches(/[A-Z]/, "Password must include uppercase letter")
-        .matches(/[!@#$%^&*]/, "Password must include special character")
+        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .matches(
+          /[!@#$%^&*]/,
+          "Password must contain at least one special character"
+        )
         .required(),
       address: yup.string().max(400).required(),
-      role: yup.string().oneOf(["admin", "user", "store_owner"]).required(),
+      role: yup.mixed().oneOf(["admin", "user", "store_owner"]).required(),
     });
 
     try {
-      // ✅ Validate data
-      await schema.validate({ name, email, password, address, role });
+      await userSchema.validate({ name, email, password, address, role });
 
       // 🔍 Check if user already exists
-      const [existingUser] = await db.query(
-        "SELECT * FROM users WHERE email = ?",
-        [email]
-      );
-      if (existingUser.length > 0) {
+      const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [
+        email,
+      ]);
+      if (existing.length > 0) {
         return res
           .status(409)
-          .json({ error: "User already exists with this email" });
+          .json({ error: "User with this email already exists." });
       }
 
       // 🔐 Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // 💾 Insert new user
+      // 💾 Insert into DB
       await db.query(
         "INSERT INTO users (name, email, password, address, role) VALUES (?, ?, ?, ?, ?)",
         [name, email, hashedPassword, address, role]
       );
 
-      res.status(201).json({ message: "User created successfully!" });
+      return res.status(201).json({ message: "User created successfully!" });
     } catch (err) {
-      console.error("User creation error:", err.message);
+      console.error("Admin add user error:", err.message);
       res.status(400).json({ error: err.message });
     }
   }
