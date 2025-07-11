@@ -133,12 +133,6 @@ Built as part of a full-stack practice + interview showcase.
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 👨‍💻 Author
 
 **Pranjal Nehete**
