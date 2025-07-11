@@ -81,10 +81,11 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    console.log("🔑 Incoming password:", password);
+    console.log("🔐 Stored hashed password:", user.password);
+
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+    console.log("✅ Do they match?", isMatch);
 
     const payload = {
       id: user.id,
