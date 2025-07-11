@@ -63,7 +63,7 @@ router.get(
   allowRoles("admin"),
   async (req, res) => {
     try {
-      const { name, email, role } = req.query;
+      const { name, email, role, sort_by, sort_order } = req.query;
 
       // 🧠 Dynamic query building
       let baseQuery =
@@ -81,6 +81,16 @@ router.get(
       if (role) {
         baseQuery += " AND role = ?";
         params.push(role);
+      }
+
+      const allowedSortFields = ["name", "email", "role"];
+      const allowedOrder = ["asc", "desc"];
+
+      if (sort_by && allowedSortFields.includes(sort_by)) {
+        const order = allowedOrder.includes(sort_order?.toLowerCase())
+          ? sort_order.toUpperCase()
+          : "ASC";
+        baseQuery += ` ORDER BY ${sort_by} ${order}`;
       }
 
       const [rows] = await db.query(baseQuery, params);
@@ -155,7 +165,7 @@ router.get(
   allowRoles("admin"),
   async (req, res) => {
     try {
-      const { name, email, address, owner_name } = req.query;
+      const { name, city, owner, sort_by, sort_order } = req.query;
 
       // 🧠 Start with base query (JOIN with users table to get owner name)
       let baseQuery = `
@@ -187,6 +197,16 @@ router.get(
       if (owner_name) {
         baseQuery += " AND users.name LIKE ?";
         params.push(`%${owner_name}%`);
+      }
+
+      const allowedSortFields = ["name", "email", "address", "created_at"];
+      const allowedOrder = ["asc", "desc"];
+
+      if (sort_by && allowedSortFields.includes(sort_by)) {
+        const order = allowedOrder.includes(sort_order?.toLowerCase())
+          ? sort_order.toUpperCase()
+          : "ASC";
+        baseQuery += ` ORDER BY ${sort_by} ${order}`;
       }
 
       const [rows] = await db.query(baseQuery, params);
@@ -296,6 +316,50 @@ router.get(
 
       // 3️⃣ For other roles, just return user info
       return res.json(user);
+    } catch (err) {
+      console.error("Error fetching user details:", err.message);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+// ✅ Get details of a specific user (Admin only)
+router.get(
+  "/users/:id",
+  authenticateToken,
+  allowRoles("admin"),
+  async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+      // 🧠 Get basic user info
+      const [userRows] = await db.query(
+        "SELECT id, name, email, address, role FROM users WHERE id = ?",
+        [userId]
+      );
+
+      if (userRows.length === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const user = userRows[0];
+
+      // 🔍 If user is a store owner, fetch their store and average rating
+      if (user.role === "store_owner") {
+        const [storeRows] = await db.query(
+          `SELECT s.id AS store_id, s.name AS store_name, s.address, s.email,
+                    ROUND(AVG(r.rating), 2) AS average_rating
+             FROM stores s
+             LEFT JOIN ratings r ON s.id = r.store_id
+             WHERE s.owner_id = ?
+             GROUP BY s.id`,
+          [user.id]
+        );
+
+        user.store = storeRows[0] || null;
+      }
+
+      res.json(user);
     } catch (err) {
       console.error("Error fetching user details:", err.message);
       res.status(500).json({ error: "Internal server error" });
