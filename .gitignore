@@ -1,0 +1,13 @@
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore environment files
+.env
+.env.local
+
+# Ignore frontend build output (if using Vite/React)
+dist/
+build/
+
+# Logs and other junk
+*.log
