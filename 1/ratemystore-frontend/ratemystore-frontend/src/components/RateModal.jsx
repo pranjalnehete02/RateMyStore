@@ -17,13 +17,15 @@ export default function RateModal({ show, onClose, store, onSubmit }) {
   const handleRatingSubmit = async () => {
     try {
       const token = localStorage.getItem("token");
+
       await axios.post(
-        `http://localhost:5000/api/stores/${store.id}/rate`,
+        `http://localhost:5000/api/ratings/${store.id}`, // ✅ correct endpoint
         { rating },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       alert("✅ Rating submitted successfully!");
       onSubmit(); // Refresh store list
     } catch (err) {

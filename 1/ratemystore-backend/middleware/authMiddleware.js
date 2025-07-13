@@ -1,10 +1,11 @@
+// middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
-const authMiddleware = (req, res, next) => {
+module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  // Check if token exists
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "No token provided" });
   }
@@ -12,13 +13,14 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // add user info to req object
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret123");
+
+    // ✅ This is the golden line!
+    req.user = decoded;
+
     next();
   } catch (err) {
-    console.error("Token error:", err.message);
-    res.status(401).json({ message: "Invalid or expired token" });
+    console.error("Auth Error:", err);
+    res.status(401).json({ message: "Invalid token" });
   }
 };
-
-module.exports = authMiddleware;
