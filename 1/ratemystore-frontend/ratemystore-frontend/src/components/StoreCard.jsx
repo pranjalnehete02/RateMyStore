@@ -1,47 +1,43 @@
-import { useState } from "react";
-import RateModal from "./RateModal";
+import React from "react";
 
-export default function StoreCard({ store, onRatingUpdate }) {
-  const [showModal, setShowModal] = useState(false);
-
-  const handleRateClick = () => setShowModal(true);
-  const handleModalClose = () => setShowModal(false);
-
+export default function StoreCard({ store, onRateClick, onDelete }) {
   return (
-    <div className="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
-      <div>
-        <h2 className="text-xl font-semibold mb-2">{store.name}</h2>
-        <p className="text-gray-700 text-sm">Email: {store.email}</p>
-        <p className="text-gray-700 text-sm">City: {store.city}</p>
-        <p className="text-gray-700 text-sm">ZIP: {store.zip}</p>
-        <p className="text-gray-700 text-sm mt-2">
-          Average Rating:{" "}
-          <span className="font-medium">
-            {store.average_rating ?? "Not rated yet"}
-          </span>
+    <div className="w-full max-w-md mx-auto my-4 shadow-lg p-4 rounded-xl bg-white">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-xl font-semibold">{store.name}</h2>
+        {onDelete && (
+          <button
+            onClick={() => onDelete(store.id)}
+            className="text-red-600 text-sm hover:underline"
+          >
+            Delete
+          </button>
+        )}
+      </div>
+      <p className="text-gray-600">
+        📍 {store.city} - {store.zip}
+      </p>
+      <p className="text-gray-600">📧 {store.email}</p>
+
+      <div className="mt-2">
+        <p className="text-sm text-gray-500">
+          ⭐ Average Rating:{" "}
+          {store.average_rating
+            ? Number(store.average_rating).toFixed(1)
+            : "N/A"}
         </p>
-        <p className="text-gray-700 text-sm">
-          Your Rating:{" "}
-          <span className="font-medium">
-            {store.user_rating ?? "You haven't rated yet"}
-          </span>
+        <p className="text-sm text-gray-500">
+          🙋 Your Rating: {store.user_rating ?? "Not Rated Yet"}
         </p>
       </div>
-      <button
-        onClick={handleRateClick}
-        className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-sm"
-      >
-        Rate this Store
-      </button>
 
-      {/* Rating Modal */}
-      {showModal && (
-        <RateModal
-          show={showModal}
-          onClose={handleModalClose}
-          store={store}
-          onSubmit={onRatingUpdate}
-        />
+      {onRateClick && (
+        <button
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          onClick={() => onRateClick(store)}
+        >
+          {store.user_rating ? "Edit Rating" : "Rate Store"}
+        </button>
       )}
     </div>
   );
