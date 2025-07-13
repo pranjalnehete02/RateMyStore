@@ -50,3 +50,28 @@ exports.deleteStore = async (req, res) => {
     res.status(500).json({ message: "Server error while deleting store" });
   }
 };
+
+// Get All Stores with Average Ratings
+exports.getAllStores = async (req, res) => {
+  try {
+    const db = require("../db");
+    const user_id = req.user.id;
+
+    const [stores] = await db.query(
+      `
+        SELECT s.*, 
+               ROUND(AVG(r.rating), 1) AS average_rating,
+               MAX(CASE WHEN r.user_id = ? THEN r.rating ELSE NULL END) AS user_rating
+        FROM stores s
+        LEFT JOIN ratings r ON s.id = r.store_id
+        GROUP BY s.id
+      `,
+      [user_id]
+    );
+
+    res.json(stores);
+  } catch (err) {
+    console.error("Get All Stores Error:", err);
+    res.status(500).json({ message: "Server error while fetching stores" });
+  }
+};

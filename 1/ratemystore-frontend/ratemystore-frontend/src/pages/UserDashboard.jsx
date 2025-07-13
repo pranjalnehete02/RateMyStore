@@ -1,89 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import StoreCard from "../components/StoreCard";
-import RateModal from "../components/RateModal";
 
 export default function UserDashboard() {
-  // ✅ Hardcoded store data
-  const [stores, setStores] = useState([
-    {
-      id: 1,
-      name: "D-Mart",
-      email: "dmart@example.com",
-      city: "Pune",
-      zip: "411001",
-      average_rating: 4.2,
-      user_rating: 5,
-    },
-    {
-      id: 2,
-      name: "Reliance Mart",
-      email: "reliance@example.com",
-      city: "Mumbai",
-      zip: "400001",
-      average_rating: 3.8,
-      user_rating: null,
-    },
-    {
-      id: 3,
-      name: "Tech World",
-      email: "tech@store.com",
-      city: "Bangalore",
-      zip: "560001",
-      average_rating: 4.7,
-      user_rating: 4,
-    },
-    {
-      id: 4,
-      name: "Fresh Mart",
-      email: "fresh@store.com",
-      city: "Hyderabad",
-      zip: "500001",
-      average_rating: 4.1,
-      user_rating: null,
-    },
-  ]);
+  const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedStore, setSelectedStore] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-
-  const handleRateClick = (store) => {
-    setSelectedStore(store);
-    setShowModal(true);
+  const fetchStores = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:5000/api/stores", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setStores(response.data);
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleModalClose = () => {
-    setShowModal(false);
-    setSelectedStore(null);
-  };
-
-  const handleModalSubmit = () => {
-    // You can update the state here in the future when connecting to API
-    handleModalClose();
-  };
+  useEffect(() => {
+    fetchStores();
+  }, []);
 
   return (
-    <div className="container mt-4">
-      <h2 className="mb-4">Welcome! Rate the Stores Below</h2>
-
-      {stores.length === 0 ? (
-        <p>No stores available for rating.</p>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">All Stores</h1>
+      {loading ? (
+        <p className="text-center text-gray-600">Loading stores...</p>
       ) : (
-        <div className="row">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {stores.map((store) => (
-            <div className="col-md-4 mb-3" key={store.id}>
-              <StoreCard store={store} onRate={handleRateClick} />
-            </div>
+            <StoreCard
+              key={store.id}
+              store={store}
+              onRatingUpdate={fetchStores} // To refresh after rating
+            />
           ))}
         </div>
       )}
-
-      {/* Rating Modal */}
-      <RateModal
-        show={showModal}
-        store={selectedStore}
-        onClose={handleModalClose}
-        onSubmit={handleModalSubmit}
-      />
     </div>
   );
 }

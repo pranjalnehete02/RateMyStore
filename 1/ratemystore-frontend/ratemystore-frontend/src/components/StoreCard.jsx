@@ -1,30 +1,48 @@
-import React from "react";
-import RateModal from "../components/RateModal";
+import { useState } from "react";
+import RateModal from "./RateModal";
 
-export default function StoreCard({ store, onRate }) {
+export default function StoreCard({ store, onRatingUpdate }) {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleRateClick = () => setShowModal(true);
+  const handleModalClose = () => setShowModal(false);
+
   return (
-    <div className="card mb-3 shadow-sm">
-      <div className="card-body">
-        <h5 className="card-title">{store.name}</h5>
-        <p className="card-text">
-          <strong>Email:</strong> {store.email} <br />
-          <strong>City:</strong> {store.city}, <strong>ZIP:</strong> {store.zip}{" "}
-          <br />
-          <strong>Average Rating:</strong>{" "}
-          {store.average_rating || "Not rated yet"} <br />
-          {store.user_rating && (
-            <>
-              <strong>Your Rating:</strong> {store.user_rating} <br />
-            </>
-          )}
+    <div className="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+      <div>
+        <h2 className="text-xl font-semibold mb-2">{store.name}</h2>
+        <p className="text-gray-700 text-sm">Email: {store.email}</p>
+        <p className="text-gray-700 text-sm">City: {store.city}</p>
+        <p className="text-gray-700 text-sm">ZIP: {store.zip}</p>
+        <p className="text-gray-700 text-sm mt-2">
+          Average Rating:{" "}
+          <span className="font-medium">
+            {store.average_rating ?? "Not rated yet"}
+          </span>
         </p>
-        <button
-          className="btn btn-sm btn-outline-primary"
-          onClick={() => onRate(store)}
-        >
-          Rate Store
-        </button>
+        <p className="text-gray-700 text-sm">
+          Your Rating:{" "}
+          <span className="font-medium">
+            {store.user_rating ?? "You haven't rated yet"}
+          </span>
+        </p>
       </div>
+      <button
+        onClick={handleRateClick}
+        className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-sm"
+      >
+        Rate this Store
+      </button>
+
+      {/* Rating Modal */}
+      {showModal && (
+        <RateModal
+          show={showModal}
+          onClose={handleModalClose}
+          store={store}
+          onSubmit={onRatingUpdate}
+        />
+      )}
     </div>
   );
 }

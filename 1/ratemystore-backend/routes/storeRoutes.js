@@ -37,4 +37,11 @@ router.delete(
   storeController.deleteStore
 );
 
+// GET: Get all stores (for normal users)
+router.get(
+  "/",
+  authMiddleware, // normal users and store owners can access
+  storeController.getAllStores
+);
+
 module.exports = router;
