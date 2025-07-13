@@ -1,0 +1,11 @@
+{
+  "name": "ratemystore",
+  "version": "1.0.0",
+  "description": "🏪 RateMyStore\r RateMyStore is a full-stack web application developed for the FullStack Intern Coding Challenge. It enables users to register, log in, and rate stores (1–5 stars) with role-based dashboards for Normal Users, Store Owners, and System Administrators. The frontend features a modern, minimalistic glassmorphism design with subtle animations, built using React.js and Bootstrap, while the backend uses Express.js and MySQL/PostgreSQL with JWT authentication.\r Table of Contents",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
