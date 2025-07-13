@@ -20,6 +20,9 @@ app.get("/", (req, res) => {
   res.send("🎉 Welcome to the RateMyStore Backend!");
 });
 
+const ratingRoutes = require("./routes/ratingRoutes");
+app.use("/api/ratings", ratingRoutes);
+
 // Server listen
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
