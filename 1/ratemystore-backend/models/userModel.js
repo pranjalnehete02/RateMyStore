@@ -1,5 +1,5 @@
 // models/userModel.js
-const db = require("../config/db");
+const db = require("../db");
 
 const createUser = (name, email, hashedPassword, role) => {
   return new Promise((resolve, reject) => {
