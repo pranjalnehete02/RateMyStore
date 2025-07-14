@@ -8,8 +8,6 @@
 
 The frontend is built using **React.js + TailwindCSS**, and the backend uses **Express.js + MySQL**, with **JWT** authentication.
 
----
-
 ## 📚 Table of Contents
 
 - [🚀 Features](#-features)
@@ -22,8 +20,6 @@ The frontend is built using **React.js + TailwindCSS**, and the backend uses **E
 - [🗄️ Database Schema](#-database-schema)
 - [🤝 Contributing](#-contributing)
 - [👨‍💻 Developed By](#-developed-by)
-
----
 
 ## 🚀 Features
 
@@ -39,11 +35,7 @@ The frontend is built using **React.js + TailwindCSS**, and the backend uses **E
 - 📱 **Responsive UI** with **TailwindCSS**
 - 🔄 **Live Store Updates** after rating or creation
 
----
-
 ## 🧱 Tech Stack
-
----
 
 | Layer    | Technology                   |
 | -------- | ---------------------------- |
@@ -88,8 +80,6 @@ The frontend is built using **React.js + TailwindCSS**, and the backend uses **E
 | Password | 8–16 characters, 1 uppercase, 1 special character |
 | Address  | Max 400 characters                                |
 
----
-
 ## ⚙️ Installation & Setup
 
 ### 🛠️ Prerequisites
@@ -97,8 +87,6 @@ The frontend is built using **React.js + TailwindCSS**, and the backend uses **E
 - Node.js (v16+)
 - MySQL
 - Git
-
----
 
 ### 🧩 Clone the Repository
 
@@ -109,11 +97,7 @@ cd RateMyStore
 
 # 📦 RateMyStore Setup Instructions (Full Project in One Script Format)
 
-# --------------------------------
-
 # 🔙 Backend Setup
-
-# --------------------------------
 
 ```bash
 cd ratemystore-backend
