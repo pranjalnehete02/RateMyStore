@@ -293,10 +293,10 @@ git push origin feature/your-feature
 git pull
 ```
 
-# 👨‍💻 Developed By
+👨‍💻 Developed By
 
-# Pranjal Nehete https://pranjalnehete.vercel.app/
+Pranjal Nehete https://pranjalnehete.vercel.app/
 
-# FullStack Intern Coding Challenge – Roxiler Systems
+FullStack Intern Coding Challenge – Roxiler Systems
 
-# GitHub: https://github.com/pranjalnehete02
+GitHub: https://github.com/pranjalnehete02
