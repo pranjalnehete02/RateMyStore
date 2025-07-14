@@ -307,27 +307,27 @@ CREATE TABLE ratings (
 
 # --------------------------------
 
-# 1. Fork the repository
+- 1. Fork the repository
 
-# 2. Create a feature branch
+- 2. Create a feature branch
 
 ```bash
 git checkout -b feature/your-feature
 ```
 
-# 3. Commit your changes
+- 3. Commit your changes
 
 ```bash
 git commit -m "Add your feature"
 ```
 
-# 4. Push the branch
+- 4. Push the branch
 
 ```bash
 git push origin feature/your-feature
 ```
 
-# 5. Open a pull request on GitHub
+- 5. Open a pull request on GitHub
 
 ```bash
 git pull
