@@ -8,8 +8,6 @@
 
 The frontend is built using **React.js + TailwindCSS**, and the backend uses **Express.js + MySQL**, with **JWT** authentication.
 
----
-
 ## 📚 Table of Contents
 
 - [🚀 Features](#-features)
