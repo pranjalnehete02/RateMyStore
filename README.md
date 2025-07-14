@@ -117,29 +117,25 @@ JWT_SECRET=your_jwt_secret
 " > .env
 ```
 
-# Start MySQL and Create Database
+- Start MySQL and Create Database
 
-# (Login into MySQL CLI if needed: mysql -u root -p)
+- (Login into MySQL CLI if needed: mysql -u root -p)
 
 ```bash
 mysql -u your_mysql_user -p -e "CREATE DATABASE ratemystore;"
 ```
 
-# Import schema manually or using a tool like MySQL Workbench:
+- Import schema manually or using a tool like MySQL Workbench:
 
-# ratemystore-backend/database/schema.sql
+- ratemystore-backend/database/schema.sql
 
-# Start Backend Server
+- Start Backend Server
 
 ```bash
 npm run dev
 ```
 
-# --------------------------------
-
 # 💻 Frontend Setup
-
-# --------------------------------
 
 ```bash
 cd ../ratemystore-frontend
@@ -152,17 +148,13 @@ npm install
 npm run dev
 ```
 
-# Open Frontend in browser
+- Open Frontend in browser
 
 # http://localhost:5173
 
-# --------------------------------
-
 # 📁 Project Structure
 
-# --------------------------------
-
-# Directory tree of the project
+- Directory tree of the project
 
 ```bash
 # RateMyStore/
@@ -195,11 +187,7 @@ npm run dev
 # └── vercel.json
 ```
 
-# --------------------------------
-
 # 🔗 API Endpoints
-
-# --------------------------------
 
 # 📌 Authentication
 
@@ -229,11 +217,7 @@ npm run dev
 
 - POST /api/admin/stores -> Add store with owner_id
 
-# --------------------------------
-
 # 🗄️ Database Schema
-
-# --------------------------------
 
 # 📌 users table
 
@@ -279,17 +263,9 @@ CREATE TABLE ratings (
 );
 ```
 
-# --------------------------------
-
 # Screenshots
 
-# --------------------------------
-
-# --------------------------------
-
 # 🤝 Contributing
-
-# --------------------------------
 
 - 1. Fork the repository
 
@@ -317,11 +293,7 @@ git push origin feature/your-feature
 git pull
 ```
 
-# --------------------------------
-
 # 👨‍💻 Developed By
-
-# --------------------------------
 
 # Pranjal Nehete https://pranjalnehete.vercel.app/
 
