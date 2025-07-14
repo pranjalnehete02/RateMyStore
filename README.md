@@ -219,31 +219,31 @@ npm run dev
 
 # 📌 Authentication
 
-# POST /api/auth/register -> { name, email, password, role, address }
+- POST /api/auth/register -> { name, email, password, role, address }
 
-# POST /api/auth/login -> { email, password }
+- POST /api/auth/login -> { email, password }
 
-# 🏪 Stores
+- 🏪 Stores
 
-# GET /api/stores -> Get all stores
+- GET /api/stores -> Get all stores
 
-# GET /api/stores/owner -> Get stores by logged-in store owner
+- GET /api/stores/owner -> Get stores by logged-in store owner
 
-# POST /api/stores/add -> Add a new store
+- POST /api/stores/add -> Add a new store
 
-# DELETE /api/stores/:id -> Delete a store
+- DELETE /api/stores/:id -> Delete a store
 
 # ⭐ Ratings
 
-# POST /api/ratings/:storeId -> Submit or update a rating
+- POST /api/ratings/:storeId -> Submit or update a rating
 
-# POST /api/ratings/submit -> Alternate way to submit a rating
+- POST /api/ratings/submit -> Alternate way to submit a rating
 
-# ⚙️ Admin-Only (via Postman)
+- ⚙️ Admin-Only (via Postman)
 
-# POST /api/admin/users -> Add a new user
+- POST /api/admin/users -> Add a new user
 
-# POST /api/admin/stores -> Add store with owner_id
+- POST /api/admin/stores -> Add store with owner_id
 
 # --------------------------------
 
